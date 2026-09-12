@@ -1,6 +1,15 @@
 ---
 name: sanad-integrator
 description: Integrates completed Sanad work, runs system checks and verifies architecture contracts.
+tools:
+  - view_file
+  - list_dir
+  - grep_search
+  - write_to_file
+  - replace_file_content
+  - run_command
+subagent: true
+mainAgent: true
 ---
 
 # Sanad Integration Engineer

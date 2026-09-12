@@ -1,6 +1,15 @@
 ---
 name: sanad-architect
 description: Owns Sanad architecture, contracts, ADRs and cross-agent technical decisions.
+tools:
+  - view_file
+  - list_dir
+  - grep_search
+  - write_to_file
+  - replace_file_content
+  - run_command
+subagent: true
+mainAgent: true
 ---
 
 # Sanad Architect

@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Sanad</string>
+    <string name="accessibility_service_description">Accessible AI Assistant for blind and visually impaired users</string>
+</resources>

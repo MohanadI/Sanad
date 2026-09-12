@@ -139,21 +139,26 @@ Sanad is structured as a **Modular Monolith** backend supporting an **Android-fi
   - Full TalkBack compatibility via native Android accessibility node trees (`accessibilityRole`, `accessibilityState`, `accessibilityLiveRegion`).
   - High-fidelity audio cue system (distinct auditory non-speech icons / "earcons" for listening, processing, confirming, success, error).
   - Screen curtain mode (allows blind users to blank the display to preserve battery and maintain privacy in public).
+- **Autonomous Emergency Subsystem (ADR-005):**
+  - Features an autonomous Android Kotlin native module (`EmergencyNativeModule`) that operates with **zero cloud dependency**.
+  - Initiates emergency protocols via physical hardware button patterns or offline keyword recognition.
+  - Enforces a 5-second audible countdown with direct native telephony intent dispatch (`Intent.ACTION_CALL`), guaranteeing life-safety availability during cellular dropouts or checkpoint jamming.
 - **Security & Storage:**
   - Cryptographic material and local authentication tokens stored exclusively in Android Keystore via EncryptedSharedPreferences.
-  - Zero sensitive location or audio recordings retained on disk.
+  - Sovereign Privacy (ADR-006): Contact address book names and details remain strictly on the local device; only random contact UUIDs are referenced in server communication. Zero raw location or audio recordings retained on disk.
 
 ### 4.2. Intent Classification & Dialect Normalizer
 - **Responsibility:** Ingest spoken or transcribed Palestinian Arabic text, normalize dialect variations (e.g., phonetic shifts between Jerusalem, rural West Bank, and Gaza), and map the input into a validated, strongly-typed `StructuredAction`.
 - **Architectural Constraints:**
   - Must never execute code or call external APIs.
   - Hybrid pipeline: Fast-path deterministic regex/rule matching for standardized accessibility queries; lightweight Arabic-capable language model for conversational normalization.
-  - Output is strictly bounded by JSON Schema / Zod definitions. If schema validation fails, the request is rejected immediately.
+  - Output is strictly bounded by JSON Schema / Zod definitions and sealed with a cryptographic `candidateToken` (ADR-006) to prevent Confused Deputy payload injection.
 
 ### 4.3. Deterministic Policy Engine Kernel
 - **Responsibility:** The supreme arbiter of system actions. Decides whether an action can proceed, must be confirmed, or is rejected.
 - **Decision Engine Matrix:**
   - Evaluates: `(User Context, Device Health, Requested Action, Target Resource, Capability Grants, Risk Tier) -> PolicyDecision`.
+  - Authoritative Confirmation (ADR-004): Confirmation requirements are derived authoritatively from `CAPABILITY_CONFIRMATION_RULES`, strictly ignoring any client- or AI-provided confirmation flags to prevent confirmation suppression.
   - Guarantees:
     - Zero external I/O during policy evaluation.
     - Zero random or probabilistic inputs.
@@ -167,13 +172,14 @@ Sanad is structured as a **Modular Monolith** backend supporting an **Android-fi
 - **Sandboxing & Isolation:**
   - Each tool executor implements a strict interface: `execute(action: ValidatedAction, token: AuthToken): Promise<ToolResult>`.
   - Tools reject any invocation lacking a cryptographically valid, non-expired authorization token issued by the Policy Engine.
+  - Parameter Hash Verification (ADR-004): The executor strictly asserts that $\text{SHA-256}(\text{targetCapability} + \text{canonical}(\text{parameters})) == \text{token.actionHash}$ prior to execution, preventing parameter substitution attacks.
   - Sensitive domains (Calls, Messaging, Location, Calendar, Emergency) are **disabled by default** behind capability gates in this architectural phase.
 
 ### 4.5. Persistence & Audit Subsystem
 - **Database:** PostgreSQL 16 utilizing row-level encryption for sensitive user preferences.
-- **Audit Records:**
+- **Audit Records & Zero-Phone Invariant (ADR-006):**
   - Every evaluated intent, policy decision, confirmation interaction, and tool execution writes an immutable, append-only audit event.
-  - Zero raw PII (no phone numbers, no GPS coordinates, no message contents) stored in audit tables; identifiers are cryptographically hashed or pseudonymized.
+  - Zero telephone numbers or reversible phone hashes are permitted in audit tables, completely eliminating rainbow table de-anonymization. All identities are cryptographically pseudonymized.
 
 ---
 

@@ -1,6 +1,15 @@
 ---
 name: sanad-mobile
 description: Builds the Sanad React Native application and native Android/iOS accessibility and device integrations.
+tools:
+  - view_file
+  - list_dir
+  - grep_search
+  - write_to_file
+  - replace_file_content
+  - run_command
+subagent: true
+mainAgent: true
 ---
 
 # Sanad Mobile Engineer

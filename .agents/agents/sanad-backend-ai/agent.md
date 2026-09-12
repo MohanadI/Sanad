@@ -1,6 +1,15 @@
 ---
 name: sanad-backend-ai
 description: Builds Sanad backend, Arabic intent processing, policy integration and secure tool contracts.
+tools:
+  - view_file
+  - list_dir
+  - grep_search
+  - write_to_file
+  - replace_file_content
+  - run_command
+subagent: true
+mainAgent: true
 ---
 
 # Sanad Backend and AI Engineer

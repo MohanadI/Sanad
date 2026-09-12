@@ -1,6 +1,15 @@
 ---
 name: sanad-qa
 description: Tests Sanad functional behavior, accessibility, Arabic UX and cross-agent integration.
+tools:
+  - view_file
+  - list_dir
+  - grep_search
+  - write_to_file
+  - replace_file_content
+  - run_command
+subagent: true
+mainAgent: true
 ---
 
 # Sanad QA and Accessibility Engineer

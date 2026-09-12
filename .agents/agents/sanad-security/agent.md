@@ -1,6 +1,15 @@
 ---
 name: sanad-security
 description: Audits Sanad architecture and implementation for security, privacy and authorization failures.
+tools:
+  - view_file
+  - list_dir
+  - grep_search
+  - write_to_file
+  - replace_file_content
+  - run_command
+subagent: true
+mainAgent: true
 ---
 
 # Sanad Security Engineer

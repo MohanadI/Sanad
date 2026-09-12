@@ -49,6 +49,7 @@ export interface AssistantInterpretRequest {
 ```json
 {
   "success": true,
+  "candidateToken": "act_eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
   "actionCandidate": {
     "intentId": "INTENT_ASSISTANT_QUERY",
     "targetCapability": "CAP_ASSISTANT_QUERY",
@@ -68,11 +69,12 @@ export interface AssistantInterpretRequest {
 ## 3. Policy Evaluation Endpoint
 
 ### `POST /v1/policy/evaluate`
-Takes a structured action candidate and deterministically computes authorization status and risk tier.
+Takes a structured action candidate bound with a cryptographic `candidateToken` and deterministically computes authorization status and risk tier. In accordance with **ADR-004**, confirmation requirements are determined authoritatively by the Policy Engine, ignoring untrusted client confirmation claims.
 
 #### Request Payload
 ```json
 {
+  "candidateToken": "act_eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
   "action": {
     "intentId": "INTENT_ALIAS_SET",
     "targetCapability": "CAP_ALIAS_MANAGE",
@@ -163,6 +165,9 @@ Resolves an active confirmation challenge using the user's spoken or interactive
 
 ### `POST /v1/tools/execute`
 Executes an authorized action. Only accepts requests carrying an unexpired, unconsumed `executionGrantToken`.
+In accordance with **ADR-004**, the executor strictly asserts that:
+$$\text{SHA-256}(\text{toolName} \,\|\, \text{canonical}(\text{parameters})) == \text{token.actionHash}$$
+Any parameter mismatch or tampering aborts execution immediately with a security rejection.
 
 #### Request Payload
 ```json
@@ -183,9 +188,9 @@ Executes an authorized action. Only accepts requests carrying an unexpired, unco
   "resultData": {
     "aliasId": "als_11223344-5566-7788-99aa-bbccddeeff00",
     "registeredAlias": "مرتي",
-    "contactName": "هدى"
+    "contactId": "cnt_550e8400-e29b-41d4-a716-446655440000"
   },
-  "feedbackArabic": "تم حفظ اللقب مرتي لجهة الاتصال هدى بنجاح.",
+  "feedbackArabic": "تم حفظ اللقب مرتي بنجاح.",
   "audioCue": "EARCON_ACTION_SUCCESS"
 }
 ```
@@ -195,7 +200,7 @@ Executes an authorized action. Only accepts requests carrying an unexpired, unco
 ## 6. Contact Alias Management API
 
 ### `GET /v1/contacts/aliases`
-Retrieves all configured contact aliases for the authenticated user.
+Retrieves all configured contact aliases for the authenticated user. Per **ADR-006** (Sovereign Privacy), plaintext contact names are never stored on or emitted by the server; mappings link exclusively to client-managed pseudonymous UUIDs.
 
 #### Response (`200 OK`)
 ```json
@@ -204,13 +209,13 @@ Retrieves all configured contact aliases for the authenticated user.
     {
       "id": "als_11223344",
       "alias": "مرتي",
-      "contactName": "هدى",
+      "contactId": "cnt_550e8400-e29b-41d4-a716-446655440000",
       "createdAt": "2026-09-12T09:00:00Z"
     },
     {
       "id": "als_99887766",
       "alias": "أخوي",
-      "contactName": "أحمد",
+      "contactId": "cnt_661f9511-f30c-52e5-b827-557766551111",
       "createdAt": "2026-09-12T09:15:00Z"
     }
   ]

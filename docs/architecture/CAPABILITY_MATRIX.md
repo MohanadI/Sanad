@@ -24,17 +24,17 @@ The table below maps all capabilities specified in the Master Plan and platform 
 | Capability ID | Domain | Execution Target | Risk Tier | User Confirmation Required? | OS Permissions Required | Current Implementation Status |
 |---|---|---|---|---|---|---|
 | `CAP_ASSISTANT_QUERY` | Core Assistant | Server | `LOW` | No | None | **ACTIVE_CORE** |
-| `CAP_ALIAS_MANAGE` | Contact Aliases | Server / Device | `LOW` | No (Voice feedback only) | None | **ACTIVE_CORE** |
+| `CAP_ALIAS_MANAGE` | Contact Aliases | Server / Device | `LOW` | **YES (Always - ADR-004)** | None | **ACTIVE_CORE** |
 | `CAP_SETTINGS_ACCESSIBILITY`| Device Settings | Device | `LOW` | No | None | **ACTIVE_CORE** |
 | `CAP_AUDIT_INSPECT` | Privacy / Logs | Server | `LOW` | No | None | **ACTIVE_CORE** |
 | `CAP_ACTION_CANCEL` | Safety Controls | Client / Server | `LOW` | No (Immediate preempt) | None | **ACTIVE_CORE** |
 | `CAP_CONTACT_CALL` | Telephony | Device Native | `HIGH` | **YES (Always)** | `CALL_PHONE` / `DIAL` | **DEFERRED_GATED** (Constraint Enforced) |
 | `CAP_MESSAGE_SEND` | Messaging | Device Native | `HIGH` | **YES (Always + Readback)** | `SEND_SMS` | **DEFERRED_GATED** (Constraint Enforced) |
-| `CAP_LOCATION_READ` | Geolocation | Device Native | `MEDIUM` | Conditional | `ACCESS_FINE_LOCATION` | **DEFERRED_GATED** (Constraint Enforced) |
+| `CAP_LOCATION_READ` | Geolocation | Device Native | `MEDIUM` | **YES (Always - ADR-004)** | `ACCESS_FINE_LOCATION` | **DEFERRED_GATED** (Constraint Enforced) |
 | `CAP_LOCATION_SHARE` | Geolocation | Device / Server | `HIGH` | **YES (Always + Recipient)**| `ACCESS_FINE_LOCATION` | **DEFERRED_GATED** (Constraint Enforced) |
 | `CAP_CALENDAR_READ` | Scheduling | Device / API | `LOW` | No | `READ_CALENDAR` | **DEFERRED_GATED** (Constraint Enforced) |
 | `CAP_CALENDAR_WRITE` | Scheduling | Device / API | `MEDIUM` | **YES (Summary Readback)** | `WRITE_CALENDAR` | **DEFERRED_GATED** (Constraint Enforced) |
-| `CAP_EMERGENCY_TRIGGER`| Safety / Life | Device Native | `CRITICAL` | Predefined Protocol | `CALL_PHONE`, `LOCATION` | **DEFERRED_GATED** (Constraint Enforced) |
+| `CAP_EMERGENCY_TRIGGER`| Safety / Life | **DEVICE_LOCAL_AUTONOMOUS (ADR-005)** | `CRITICAL` | **Autonomous Local Protocol** | `CALL_PHONE` | **DEFERRED_GATED** (Constraint Enforced) |
 
 ---
 

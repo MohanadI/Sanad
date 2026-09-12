@@ -1,0 +1,136 @@
+# ==============================================================================
+# Sanad - Git Ignore Specification
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# 1. Dependencies & Package Managers
+# ------------------------------------------------------------------------------
+node_modules/
+**/node_modules/
+.pnp/
+.pnp.js
+
+# ------------------------------------------------------------------------------
+# 2. Environment & Secrets (Zero-PII / Security Compliance)
+# ------------------------------------------------------------------------------
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.cert
+*.crt
+*.p12
+*.pfx
+
+# ------------------------------------------------------------------------------
+# 3. Build & Compiler Outputs
+# ------------------------------------------------------------------------------
+dist/
+**/dist/
+build/
+**/build/
+out/
+**/out/
+*.tsbuildinfo
+.cache/
+.parcel-cache/
+
+# ------------------------------------------------------------------------------
+# 4. Logs & Telemetry
+# ------------------------------------------------------------------------------
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ------------------------------------------------------------------------------
+# 5. Testing & Code Coverage
+# ------------------------------------------------------------------------------
+coverage/
+**/coverage/
+*.lcov
+.nyc_output/
+test-results/
+junit.xml
+
+# ------------------------------------------------------------------------------
+# 6. React Native & Metro Bundler
+# ------------------------------------------------------------------------------
+.metro-cache/
+.metro-health-check*
+metro-cache/
+
+# ------------------------------------------------------------------------------
+# 7. Android Native Builds & Secrets
+# ------------------------------------------------------------------------------
+**/android/.gradle/
+**/android/build/
+**/android/app/build/
+**/android/local.properties
+**/android/.idea/
+*.apk
+*.aab
+*.ap_
+*.dex
+*.class
+
+# Android Keystores & Signing Keys (Strict Prohibition)
+*.keystore
+*.jks
+**/signing.properties
+
+# ------------------------------------------------------------------------------
+# 8. iOS (Phase 5 Roadmapping)
+# ------------------------------------------------------------------------------
+**/ios/Pods/
+**/ios/build/
+*.xcworkspace
+*.xcuserdata
+*.mode1v3
+*.mode2v3
+
+# ------------------------------------------------------------------------------
+# 9. Large AI Models & Binary Weights
+# ------------------------------------------------------------------------------
+ai-models/downloads/
+ai-models/cache/
+*.bin
+*.onnx
+*.pt
+*.pth
+*.safetensors
+*.gguf
+*.tar.gz
+# Keep model documentation, configs, and dialect lexicons
+!ai-models/**/README.md
+!ai-models/**/config.json
+!ai-models/**/lexicon*.json
+
+# ------------------------------------------------------------------------------
+# 10. OS & Editor Artifacts
+# ------------------------------------------------------------------------------
+.DS_Store
+**/.DS_Store
+._*
+Thumbs.db
+ehthumbs.db
+
+# IDEs
+.idea/
+*.swp
+*.swo
+*~
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+
+# ------------------------------------------------------------------------------
+# 11. Temporary & Scratch Files
+# ------------------------------------------------------------------------------
+tmp/
+temp/
+.temp/
+scratch/

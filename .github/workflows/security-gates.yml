@@ -1,0 +1,38 @@
+name: Sanad Security Gates
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  security-validation-gates:
+    name: Security & Policy Enforcement Gates
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20 LTS
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install Workspace Dependencies
+        run: npm ci
+
+      - name: Typecheck Backend and Mobile Packages
+        run: npm run typecheck:all
+
+      - name: Execute Blocking Security Gate Test Suites
+        run: npm run test:security
+        env:
+          NODE_ENV: test
+          CI: true
+
+      - name: Execute Full Workspace Test Suites
+        run: npm test

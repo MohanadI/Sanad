@@ -1,0 +1,242 @@
+{
+  "version": "1.0.0",
+  "description": "Sanad Palestinian Arabic Intent & Linguistic Ground Truth Dataset Skeleton for Phase 2",
+  "localesCovered": [
+    "ar-PS-Madani",
+    "ar-PS-Fellahi",
+    "ar-PS-Badawi"
+  ],
+  "dataset": [
+    {
+      "id": "utt_001",
+      "utterance": "قديش الساعة هلقيت؟",
+      "dialect": "ar-PS-Madani",
+      "expectedIntent": "INTENT_ASSISTANT_QUERY",
+      "targetCapability": "CAP_ASSISTANT_QUERY",
+      "expectedSlots": { "queryType": "TIME" },
+      "minConfidence": 0.85
+    },
+    {
+      "id": "utt_002",
+      "utterance": "تشيف حال التطبيق هسا؟",
+      "dialect": "ar-PS-Fellahi",
+      "expectedIntent": "INTENT_ASSISTANT_QUERY",
+      "targetCapability": "CAP_ASSISTANT_QUERY",
+      "expectedSlots": { "queryType": "SYSTEM_STATUS" },
+      "minConfidence": 0.80
+    },
+    {
+      "id": "utt_003",
+      "utterance": "گديش شحن البطارية؟",
+      "dialect": "ar-PS-Badawi",
+      "expectedIntent": "INTENT_ASSISTANT_QUERY",
+      "targetCapability": "CAP_ASSISTANT_QUERY",
+      "expectedSlots": { "queryType": "BATTERY" },
+      "minConfidence": 0.85
+    },
+    {
+      "id": "utt_004",
+      "utterance": "ساعدني يا سند شو بتقدر تسوي؟",
+      "dialect": "ar-PS-Madani",
+      "expectedIntent": "INTENT_ASSISTANT_QUERY",
+      "targetCapability": "CAP_ASSISTANT_QUERY",
+      "expectedSlots": { "queryType": "HELP" },
+      "minConfidence": 0.90
+    },
+    {
+      "id": "utt_005",
+      "utterance": "احفظ مرتي كـ هدى محمد",
+      "dialect": "ar-PS-Madani",
+      "expectedIntent": "INTENT_ALIAS_SET",
+      "targetCapability": "CAP_ALIAS_MANAGE",
+      "expectedSlots": { "aliasName": "مرتي", "targetContact": "هدى محمد" },
+      "minConfidence": 0.85
+    },
+    {
+      "id": "utt_006",
+      "utterance": "سجل جوزي باسم أحمد",
+      "dialect": "ar-PS-Madani",
+      "expectedIntent": "INTENT_ALIAS_SET",
+      "targetCapability": "CAP_ALIAS_MANAGE",
+      "expectedSlots": { "aliasName": "جوزي", "targetContact": "أحمد" },
+      "minConfidence": 0.85
+    },
+    {
+      "id": "utt_007",
+      "utterance": "حط يابا رقم الوالد",
+      "dialect": "ar-PS-Fellahi",
+      "expectedIntent": "INTENT_ALIAS_SET",
+      "targetCapability": "CAP_ALIAS_MANAGE",
+      "expectedSlots": { "aliasName": "يابا", "targetContact": "الوالد" },
+      "minConfidence": 0.85
+    },
+    {
+      "id": "utt_008",
+      "utterance": "سجل الحكيم للدكتور سامر",
+      "dialect": "ar-PS-Madani",
+      "expectedIntent": "INTENT_ALIAS_SET",
+      "targetCapability": "CAP_ALIAS_MANAGE",
+      "expectedSlots": { "aliasName": "الحكيم", "targetContact": "سامر" },
+      "minConfidence": 0.85
+    },
+    {
+      "id": "utt_009",
+      "utterance": "ورجيني شو في ألقاب مسجلة عندك",
+      "dialect": "ar-PS-Madani",
+      "expectedIntent": "INTENT_ALIAS_LIST",
+      "targetCapability": "CAP_ALIAS_MANAGE",
+      "expectedSlots": {},
+      "minConfidence": 0.80
+    },
+    {
+      "id": "utt_010",
+      "utterance": "اقرأ كل الألقاب اللي حفظتها",
+      "dialect": "ar-PS-Fellahi",
+      "expectedIntent": "INTENT_ALIAS_LIST",
+      "targetCapability": "CAP_ALIAS_MANAGE",
+      "expectedSlots": {},
+      "minConfidence": 0.80
+    },
+    {
+      "id": "utt_011",
+      "utterance": "احذف لقب الحكيم",
+      "dialect": "ar-PS-Madani",
+      "expectedIntent": "INTENT_ALIAS_DELETE",
+      "targetCapability": "CAP_ALIAS_MANAGE",
+      "expectedSlots": { "aliasName": "الحكيم" },
+      "minConfidence": 0.88
+    },
+    {
+      "id": "utt_012",
+      "utterance": "امسح كل الألقاب المسجلة",
+      "dialect": "ar-PS-Madani",
+      "expectedIntent": "INTENT_ALIAS_CLEAR_ALL",
+      "targetCapability": "CAP_ALIAS_MANAGE",
+      "expectedSlots": {},
+      "minConfidence": 0.90
+    },
+    {
+      "id": "utt_013",
+      "utterance": "نعم موافق",
+      "dialect": "ar-PS-Madani",
+      "expectedIntent": "INTENT_ACTION_CONFIRM",
+      "targetCapability": "CAP_ACTION_CANCEL",
+      "expectedSlots": { "response": "AFFIRMATIVE" },
+      "minConfidence": 0.90
+    },
+    {
+      "id": "utt_014",
+      "utterance": "توكل على الله كمل",
+      "dialect": "ar-PS-Fellahi",
+      "expectedIntent": "INTENT_ACTION_CONFIRM",
+      "targetCapability": "CAP_ACTION_CANCEL",
+      "expectedSlots": { "response": "AFFIRMATIVE" },
+      "minConfidence": 0.90
+    },
+    {
+      "id": "utt_015",
+      "utterance": "آه تمام",
+      "dialect": "ar-PS-Madani",
+      "expectedIntent": "INTENT_ACTION_CONFIRM",
+      "targetCapability": "CAP_ACTION_CANCEL",
+      "expectedSlots": { "response": "AFFIRMATIVE" },
+      "minConfidence": 0.90
+    },
+    {
+      "id": "utt_016",
+      "utterance": "وقف هلقيت",
+      "dialect": "ar-PS-Madani",
+      "expectedIntent": "INTENT_ACTION_CANCEL",
+      "targetCapability": "CAP_ACTION_CANCEL",
+      "expectedSlots": {},
+      "minConfidence": 0.75
+    },
+    {
+      "id": "utt_017",
+      "utterance": "إلغي الأمر ولا تسوي إشي",
+      "dialect": "ar-PS-Madani",
+      "expectedIntent": "INTENT_ACTION_CANCEL",
+      "targetCapability": "CAP_ACTION_CANCEL",
+      "expectedSlots": {},
+      "minConfidence": 0.75
+    },
+    {
+      "id": "utt_018",
+      "utterance": "بلاش منه فكك",
+      "dialect": "ar-PS-Fellahi",
+      "expectedIntent": "INTENT_ACTION_CANCEL",
+      "targetCapability": "CAP_ACTION_CANCEL",
+      "expectedSlots": {},
+      "minConfidence": 0.75
+    },
+    {
+      "id": "utt_019",
+      "utterance": "اسكت",
+      "dialect": "ar-PS-Madani",
+      "expectedIntent": "INTENT_ACTION_CANCEL",
+      "targetCapability": "CAP_ACTION_CANCEL",
+      "expectedSlots": {},
+      "minConfidence": 0.75
+    },
+    {
+      "id": "utt_020",
+      "utterance": "أحمد",
+      "dialect": "ar-PS-Madani",
+      "expectedIntent": "INTENT_DISAMBIGUATION_REPLY",
+      "targetCapability": "CAP_ALIAS_MANAGE",
+      "expectedSlots": { "selectedCandidate": "أحمد" },
+      "minConfidence": 0.70,
+      "isAmbiguousTrigger": true
+    },
+    {
+      "id": "utt_021",
+      "utterance": "خرابيش كلام مش مفهوم صوت شوارع وسيارات",
+      "dialect": "ar-PS-Madani",
+      "expectedIntent": "INTENT_UNRECOGNIZED",
+      "targetCapability": "CAP_ASSISTANT_QUERY",
+      "expectedSlots": {},
+      "minConfidence": 0.30,
+      "isMalformed": true
+    },
+    {
+      "id": "utt_022",
+      "utterance": "رن على مرتي",
+      "dialect": "ar-PS-Madani",
+      "expectedIntent": "INTENT_CONTACT_CALL",
+      "targetCapability": "CAP_CONTACT_CALL",
+      "expectedSlots": { "targetContact": "مرتي" },
+      "minConfidence": 0.90,
+      "isGated": true
+    },
+    {
+      "id": "utt_023",
+      "utterance": "دق على أخوي تلفون",
+      "dialect": "ar-PS-Fellahi",
+      "expectedIntent": "INTENT_CONTACT_CALL",
+      "targetCapability": "CAP_CONTACT_CALL",
+      "expectedSlots": { "targetContact": "أخوي" },
+      "minConfidence": 0.90,
+      "isGated": true
+    },
+    {
+      "id": "utt_024",
+      "utterance": "ودّي رسالة لإمي",
+      "dialect": "ar-PS-Madani",
+      "expectedIntent": "INTENT_MESSAGE_SEND",
+      "targetCapability": "CAP_MESSAGE_SEND",
+      "expectedSlots": { "targetContact": "إمي" },
+      "minConfidence": 0.90,
+      "isGated": true
+    },
+    {
+      "id": "utt_025",
+      "utterance": "طوارئ سند النجده",
+      "dialect": "ar-PS-Madani",
+      "expectedIntent": "INTENT_EMERGENCY_TRIGGER",
+      "targetCapability": "CAP_EMERGENCY_TRIGGER",
+      "expectedSlots": {},
+      "minConfidence": 0.95,
+      "isGated": true
+    }
+  ]
+}

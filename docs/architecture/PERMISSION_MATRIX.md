@@ -70,25 +70,40 @@ The system decouples permissions into granular scopes rather than coarse bundles
 | Capability Identifier | Required Permissions | Android OS Permission | Risk Tier | Runtime Confirmation Required? | Confirmation Modality |
 |---|---|---|---|---|---|
 | `CAP_ASSISTANT_QUERY` | `sanad:perm:system:query` | None | `LOW` | **No** | None |
-| `CAP_ALIAS_MANAGE` | `sanad:perm:alias:read`, `sanad:perm:alias:write` | None | `LOW` | **Conditional** (Only on overwrite/delete) | Spoken question + Yes/No |
+| `CAP_ALIAS_MANAGE` | `sanad:perm:alias:read`, `sanad:perm:alias:write` | None | `LOW` | **Yes (Always)** | Spoken name + Yes/No |
 | `CAP_SETTINGS_ACCESSIBILITY` | None | None | `LOW` | **No** | Earcon audio acknowledgment |
 | `CAP_AUDIT_INSPECT` | `sanad:perm:audit:read` | None | `LOW` | **No** | Spoken audio summary |
 | `CAP_ACTION_CANCEL` | None | None | `LOW` | **No** | Immediate silence + earcon |
 | `CAP_CONTACT_CALL` *(Gated)* | `sanad:perm:contacts:read`, `sanad:perm:telephony:call` | `android.permission.CALL_PHONE` | `HIGH` | **Yes (Always)** | Spoken name + Yes/No |
 | `CAP_MESSAGE_SEND` *(Gated)* | `sanad:perm:contacts:read`, `sanad:perm:sms:send` | `android.permission.SEND_SMS` | `HIGH` | **Yes (Always)** | Full message read-back + Yes/No |
-| `CAP_LOCATION_READ` *(Gated)* | `sanad:perm:location:read` | `android.permission.ACCESS_FINE_LOCATION` | `MEDIUM` | **No** (Direct response) | Spoken location description |
+| `CAP_LOCATION_READ` *(Gated)* | `sanad:perm:location:read` | `android.permission.ACCESS_FINE_LOCATION` | `MEDIUM` | **Yes (Always)** | Earcon warning + Spoken description |
 | `CAP_LOCATION_SHARE` *(Gated)* | `sanad:perm:location:read`, `sanad:perm:location:share` | `android.permission.ACCESS_FINE_LOCATION` | `HIGH` | **Yes (Always)** | Spoken recipient + Yes/No |
 | `CAP_CALENDAR_READ` *(Gated)* | `sanad:perm:calendar:read` | `android.permission.READ_CALENDAR` | `LOW` | **No** | Spoken agenda summary |
 | `CAP_CALENDAR_WRITE` *(Gated)* | `sanad:perm:calendar:read`, `sanad:perm:calendar:write` | `android.permission.WRITE_CALENDAR` | `MEDIUM` | **Yes (Always)** | Date/time read-back + Yes/No |
-| `CAP_EMERGENCY_TRIGGER` *(Gated)* | `sanad:perm:emergency:alert`, `sanad:perm:telephony:call` | `android.permission.CALL_PHONE` | `CRITICAL` | **Protocol-Driven** (5s countdown with audible cancel option) | Countdown beep + "إلغاء" keyword |
+| `CAP_EMERGENCY_TRIGGER` *(Gated)* | `sanad:perm:emergency:alert`, `sanad:perm:telephony:call` | `android.permission.CALL_PHONE` | `CRITICAL` | **Autonomous Local Protocol** (5s countdown with audible cancel option) | Countdown beep + "إلغاء" keyword |
 
 ---
 
-## 4. Deterministic Evaluation Algorithm
+## 4. Deterministic Evaluation Algorithm (Governed by ADR-004)
 
-The Policy Engine implements the following deterministic evaluation algorithm in TypeScript:
+The Policy Engine implements the following deterministic evaluation algorithm in TypeScript. In accordance with **ADR-004**, confirmation requirements are dictated strictly by an authoritative server-side lookup table, ignoring any client- or AI-provided metadata:
 
 ```typescript
+export const CAPABILITY_CONFIRMATION_RULES: Record<CapabilityId, 'ALWAYS' | 'CONDITIONAL' | 'NEVER'> = {
+  CAP_ASSISTANT_QUERY: 'NEVER',
+  CAP_ALIAS_MANAGE: 'ALWAYS',
+  CAP_SETTINGS_ACCESSIBILITY: 'NEVER',
+  CAP_AUDIT_INSPECT: 'NEVER',
+  CAP_ACTION_CANCEL: 'NEVER',
+  CAP_CONTACT_CALL: 'ALWAYS',
+  CAP_MESSAGE_SEND: 'ALWAYS',
+  CAP_LOCATION_READ: 'ALWAYS',
+  CAP_LOCATION_SHARE: 'ALWAYS',
+  CAP_CALENDAR_READ: 'NEVER',
+  CAP_CALENDAR_WRITE: 'ALWAYS',
+  CAP_EMERGENCY_TRIGGER: 'ALWAYS',
+};
+
 export interface PolicyContext {
   userId: string;
   deviceId: string;
@@ -132,9 +147,13 @@ export function evaluatePolicy(context: PolicyContext): PolicyEvaluationResult {
     };
   }
 
-  // 4. Risk-Based Confirmation Determination
+  // 4. Authoritative Confirmation Determination (ADR-004)
+  // Completely ignores action.requiresConfirmation flag to prevent confirmation suppression
+  const confirmationPolicy = CAPABILITY_CONFIRMATION_RULES[capability];
+  const requiresConfirmation = confirmationPolicy === 'ALWAYS';
   const risk = CAPABILITY_RISK_TIERS[capability];
-  if (risk === 'HIGH' || risk === 'CRITICAL' || action.requiresConfirmation) {
+
+  if (requiresConfirmation) {
     const confirmationToken = generateHmacConfirmationToken(context);
     return {
       status: 'CONFIRMATION_REQUIRED',
@@ -145,7 +164,7 @@ export function evaluatePolicy(context: PolicyContext): PolicyEvaluationResult {
     };
   }
 
-  // 5. Allow Direct Execution
+  // 5. Allow Direct Execution (LOW risk actions with verified permissions)
   const executionToken = generateExecutionGrantToken(context);
   return {
     status: 'ALLOWED',
@@ -160,9 +179,9 @@ export function evaluatePolicy(context: PolicyContext): PolicyEvaluationResult {
 ## 5. Revocation, Expiration, and Audit Rules
 
 1. **Immediate Revocation:** If a user revokes an in-app permission or changes an OS setting, all active sessions and cached capability tokens are invalidated immediately.
-2. **Anti-Replay & Nonce Enforcement:** Every `confirmationToken` and `executionToken` contains:
-   - Unique UUIDv4 nonce.
-   - Exact hash of the action parameters (`SHA-256(recipient + payload + timestamp)`).
-   - Strict 30-second Time-To-Live (TTL).
-   - Single-use consumption guarantee (marked consumed in Redis/PostgreSQL).
-3. **Audit Logging:** Every rejection, permission failure, timeout, or approval is logged to the immutable audit database with the deterministic policy reason code.
+2. **Anti-Replay, Nonce & Parameter Binding (ADR-004):** Every `confirmationToken` and `executionGrantToken` contains:
+   - Unique UUIDv4 nonce tracked in an anti-replay consumption store.
+   - Cryptographic parameter binding hash: `actionHash = SHA-256(targetCapability + canonical(parameters))`.
+   - Strict Time-To-Live (TTL): 30 seconds for confirmation challenges; 10 seconds for execution grants.
+   - Single-use consumption guarantee (marked consumed on verification).
+3. **Audit Logging & Sovereign Privacy (ADR-006):** Every rejection, permission failure, timeout, or approval is logged to the immutable audit database with the deterministic policy reason code. Under no circumstances are raw telephone numbers or reversible hashes stored in audit records.

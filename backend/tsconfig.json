@@ -1,0 +1,41 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "resolveJsonModule": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true,
+    "baseUrl": ".",
+    "paths": {
+      "@sanad/common": ["packages/common/src/index.ts"],
+      "@sanad/common/*": ["packages/common/src/*"],
+      "@sanad/intent-classifier": ["packages/intent-classifier/src/index.ts"],
+      "@sanad/intent-classifier/*": ["packages/intent-classifier/src/*"],
+      "@sanad/policy-engine": ["packages/policy-engine/src/index.ts"],
+      "@sanad/policy-engine/*": ["packages/policy-engine/src/*"],
+      "@sanad/tool-executors": ["packages/tool-executors/src/index.ts"],
+      "@sanad/tool-executors/*": ["packages/tool-executors/src/*"],
+      "@sanad/audit-log": ["packages/audit-log/src/index.ts"],
+      "@sanad/audit-log/*": ["packages/audit-log/src/*"]
+    }
+  },
+  "include": [
+    "packages/*/src/**/*",
+    "packages/*/tests/**/*",
+    "tests/**/*",
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}
