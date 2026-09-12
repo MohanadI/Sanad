@@ -28,6 +28,9 @@ jobs:
       - name: Typecheck Backend and Mobile Packages
         run: npm run typecheck:all
 
+      - name: Verify Boundary Isolation & Zero AI-to-Tool References
+        run: npm run depcruise
+
       - name: Execute Blocking Security Gate Test Suites
         run: npm run test:security
         env:
